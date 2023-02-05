@@ -1,5 +1,5 @@
 Tetrominos: 
-
+    Matrix : Column = 10 Rows = 20 
     7 shapes :
         The "I" block
         The "O" block
