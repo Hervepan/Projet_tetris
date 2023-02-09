@@ -21,15 +21,18 @@ class tetromino{
 
     public: 
         //constructor
+        tetromino(){};
         tetromino(int value,arraysix offset,sf::Color color):
             value{value},offset(offset),color(color){};
             
         //method associated to the tetromino
         void setCoord(int x,int y);
         void draw(sf::RenderWindow& window);
+        void drawGhost(sf::RenderWindow& window,Board& board);
         void rotate(string direction="clockwise"s);
-        void update(Board& board,string direction,bool& reset);
+        void update(Board& board,string direction,bool& newpiece,bool ghost=false);
         void lock(Board& board);
+        void harddrop(Board& board,bool& newpiece);
         arrayeight getCoords();
 
 };
