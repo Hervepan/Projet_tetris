@@ -5,54 +5,46 @@
 #include <iostream>
 #include <random>   
 #include <array>
-
-#define Z_TETROMINO 0
-#define L_TETROMINO 1
-#define O_TETROMINO 2
-#define S_TETROMINO 3
-#define I_TETROMINO 4
-#define J_TETROMINO 5
-#define T_TETROMINO 6
-
-#define COLUMN 10
-#define ROW 20
-#define CELLSIZE 30
-
+#include "board.hpp"
 
 using namespace std;
-using array2x3=array<array<int,2>,3>;
-using array20x10=array<array<int,COLUMN>,ROW>;
 
+using arraysix=array<array<int,2>,3>;
+using arrayeight=array<array<int,2>,4>;
 
-//GLOBAL VALUE DEFINITON
+class tetromino{
+    int value;
+    int x;
+    int y;
+    arraysix offset;
+    sf::Color color;
 
-extern sf::Color colorarray[9]; //Color we use in different 
-
-//Tetrominos representation
-class Tetromino{
-    public:
-        int x;
-        int y;
-        array2x3 offset;
-        sf::Color color;
-        Tetromino(array2x3 offset,sf::Color color):
-            offset(offset),color(color){};
+    public: 
+        //constructor
+        tetromino(int value,arraysix offset,sf::Color color):
+            value{value},offset(offset),color(color){};
+            
+        //method associated to the tetromino
         void setCoord(int x,int y);
-        void fall(int speed=1);
         void draw(sf::RenderWindow& window);
-        bool collision(array20x10 board,string direction);
-        void rotate(string direction);
-        void lock();
+        void rotate(string direction="clockwise"s);
+        void update(Board& board,string direction,bool& reset);
+        void lock(Board& board);
+        arrayeight getCoords();
+
 };
 
-//Definition of all the shapes available in the game
-extern Tetromino I;
-extern Tetromino O;
-extern Tetromino S;
-extern Tetromino Z;
-extern Tetromino J;
-extern Tetromino L;
-extern Tetromino T;
 
-extern array<Tetromino,7> tetromino_array;
+extern tetromino I;
+extern tetromino O;
+extern tetromino S;
+extern tetromino Z;
+extern tetromino J;
+extern tetromino L;
+extern tetromino T;
 
+extern sf::Color colorarray[7]; 
+
+extern array<tetromino,7> tetromino_array;
+
+//Color we use in different 

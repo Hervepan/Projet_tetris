@@ -1,6 +1,5 @@
 #! /bin/bash
 
-g++ -c main.cpp tetromino.cpp drawing.cpp   
-g++ main.o drawing.o tetromino.o -o main -lsfml-graphics -lsfml-window -lsfml-system
+g++ -c tetromino.cpp main.cpp drawing.cpp board.cpp
+g++ main.o tetromino.o drawing.o board.o -o main -lsfml-graphics -lsfml-window -lsfml-system
 ./main
-
