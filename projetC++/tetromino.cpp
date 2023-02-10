@@ -24,165 +24,139 @@ tetromino I(I_tetromino,{-2,0,-1,0,1,0},colorarray[I_tetromino]);
 tetromino J(J_tetromino,{-1,0,-1,-1,1,0},colorarray[J_tetromino]);
 tetromino T(T_tetromino,{-1,0,0,-1,1,0},colorarray[T_tetromino]);
 
-
+//Defintion of the array where we get our tetrominos
 array<tetromino,7> tetromino_array({Z,L,O,S,I,J,T});
 
-//Draw the tetromino
-void tetromino::draw(sf::RenderWindow& window){
-    int x_buffer,y_buffer;
-    drawPixel(x,y,color,window);
-    for(auto coords:offset){
-        drawPixel(x+coords[0],y+coords[1],color,window);
-    }
-};
+//Definition of the wallkick array 
 
-//Draw the ghost of the tetromino
-void tetromino::drawGhost(sf::RenderWindow& window,Board& board){
-    bool boolbuffer=false;
-    tetromino tetrobuffer(*this);
-    tetrobuffer.color.a=50;
-    while(!boolbuffer){
-        tetrobuffer.update(board,"down",boolbuffer,true);
-    }
-    tetrobuffer.draw(window);
-}
+wallkick zeroone({-1,0,-1,-1,0,2,-1,2});
+wallkick onetwo({1,0,1,1,0,-2,1,-2});
+wallkick twothree({1,0,1,-1,0,2,1,2});
+wallkick threezero({-1,0,-1,1,0,-2,-1,-2});
+wallkick zeroone_I({-2,0,1,0,-2,1,1,-2});
+wallkick onetwo_I({-1,0,2,0,-1,-2,2,1});
+wallkick twothree_I({2,0,1,0,2,-1,-1,2});
+wallkick threezero_I({1,0,-2,0,1,2,-2,-1});
 
-//Set the central piece of the tetromino (also use to rotate)
+
 void tetromino::setCoord(int x,int y){
     this->x=x;
     this->y=y;
-}
+};
 
-//Get all the coordintates of the block in the tetromino
 arrayeight tetromino::getCoords(){
     arrayeight ret;
     for (int j=0;j<3;j++){
-        ret[j][0]=x+offset[j][0];
-        ret[j][1]=y+offset[j][1];
+        ret.at(j).at(0)=x+offset.at(j).at(0);
+        ret.at(j).at(1)=y+offset.at(j).at(1);
     }
     ret.at(3).at(0)=x;
     ret.at(3).at(1)=y;
     return ret;
-}
+};
 
+void tetromino::draw(sf::RenderWindow& window){
+    for(auto coords:this->getCoords()){
+        drawPixel(coords[0],coords[1],color,window);
+    }
 
-void tetromino::rotate(string direction){
+};
+
+void tetromino::updateRight(Board& board){
+    bool toupdate=true;
     int buffer;
-    int first_sign,second_sign;
-    if (value!=O_tetromino){
-        if (direction=="clockwise"){
-            first_sign=-1;   
-            second_sign=1;
-        }
-        else if(direction=="counterwise"){
-            first_sign=1;
-            second_sign=-1;
-        }
-        if (value==I_tetromino){
-            first_sign=1;
-            second_sign=1;
-        }
-        for(int i=0;i<3;i++){
-            buffer=this->offset[i][0];
-            this->offset[i][0]=first_sign*this->offset[i][1];
-            this->offset[i][1]=second_sign*buffer;
+    for (auto coords: this->getCoords()){
+        buffer=coords[0]+1;
+        if(buffer==COLUMN||board.getValue(buffer,coords[1])){
+            toupdate=false;
+            break;
         }
     }
+    if (toupdate) x++;
+};
+
+void tetromino::updateLeft(Board& board){
+    bool toupdate=true;
+    int buffer;
+    for (auto coords: this->getCoords()){
+        buffer=coords[0]-1;
+        if(buffer==-1||board.getValue(buffer,coords[1])){
+            toupdate=false;
+            break;
+        }
+    }
+    if (toupdate) x--;
 };
 
 void tetromino::lock(Board& board){
-    arrayeight coords=this->getCoords();
-    for(int i=0;i<4;i++)
-        board.setcell(coords[i][0],coords[i][1],value);
+    for(auto coords:this->getCoords()){
+        board.setCell(coords[0],coords[1],value);
+    }
 };
 
-void tetromino::harddrop(Board& board,bool& newpiece){
-    while(!newpiece){
-        this->update(board,"down",newpiece);
+void tetromino::updateDown(Board& board,bool& newpiece,bool ghost){
+    bool toupdate=true;
+    int buffer=0;
+    for (auto coords: this->getCoords()){
+        buffer=coords[1]+1;
+        if(buffer==ROW+3||board.getValue(coords[0],buffer)){
+            if(!ghost) this->lock(board);
+            toupdate=false;
+            newpiece=true;
+            break;
+        }
     }
+    if(toupdate) y++;
 }
 
-void tetromino::update(Board& board,string direction,bool& newpiece,bool ghost){
+void tetromino::harddrop(Board& board,bool& newpiece){
+    while(!newpiece) this->updateDown(board,newpiece);
+};
+
+void tetromino::drawGhost(Board& board,sf::RenderWindow& window){
+    bool boolbuffer=false;
+    tetromino ghost(*this);
+    while(!boolbuffer) ghost.updateDown(board,boolbuffer,true);
+    ghost.color.a = 128;
+    ghost.draw(window);
+};
+
+void tetromino::rotateClockwise(){
     int buffer;
+    for(int i=0;i<3;i++){
+            buffer=this->offset.at(i).at(0);
+            this->offset.at(i).at(0)=this->offset.at(i).at(1);
+            this->offset.at(i).at(1)=-buffer;
+    }
+    rotateState=(rotateState-1)%4;
+
+};
+
+void tetromino::rotateCounterClockwise(){
+    int buffer;
+    for(int i=0;i<3;i++){
+            buffer=this->offset.at(i).at(0);
+            this->offset.at(i).at(0)=-this->offset.at(i).at(1);
+            this->offset.at(i).at(1)=buffer;
+    }
+    rotateState=(rotateState+1)%4;
+}
+
+void tetromino::updateRotate(Board& board,bool clockwise){
     bool toupdate=true;
-    if (direction=="right"){
-        for (auto coords: this->getCoords()){
-            buffer=coords[0]+1;
-            if(coords[1]>0)
-                if(buffer==COLUMN||board.getvalue(buffer,coords[1])){
-                    toupdate=false;
-                    break;
-                }
+    tetromino tetrobuffer(*this);
+    if(clockwise) tetrobuffer.rotateClockwise();
+    else tetrobuffer.rotateCounterClockwise();
+    for (auto coords: tetrobuffer.getCoords()){
+        if(!board.inBound(coords[0],coords[1])||board.getValue(coords[0],coords[1])){
+            toupdate=false;
+            break;
         }
-        if (toupdate) x++;
     }
-    else if(direction=="left"){
-        for (auto coords: this->getCoords()){
-            buffer=coords[0]-1;
-            if(coords[1]>0)
-                if(buffer==-1||board.getvalue(buffer,coords[1])){
-                    toupdate=false;
-                    break;
-                }
-        }
-        if (toupdate) x--;
-
-    }
-    else if(direction=="clockwise"){
-        tetromino tetrobuffer(*this);
-        tetrobuffer.rotate();
-        for (auto coords: tetrobuffer.getCoords()){
-            if (coords[0]<=-1||coords[0]==COLUMN){
-                toupdate=false;
-                break;
-            }
-            if(coords[1]==ROW){
-                toupdate=false;
-                break;
-            }
-            if(coords[1]>0)
-                if(board.getvalue(coords[0],coords[1])){
-                    toupdate=false;
-                    break;
-                }
-        }
-        if (toupdate) this->rotate();
-
-    }
-    else if(direction=="counterwise"){
-        tetromino tetrobuffer(*this);
-        tetrobuffer.rotate("counterwise");
-        for (auto coords: tetrobuffer.getCoords()){
-            if (coords[0]<=-1||coords[0]==COLUMN){
-                toupdate=false;
-                break;
-            }
-            if(coords[1]==ROW){
-                toupdate=false;
-                break;
-            }
-            if(coords[1]>0)
-                if(board.getvalue(coords[0],coords[1])){
-                    toupdate=false;
-                    break;
-                }
-        }
-        if (toupdate) this->rotate("counterwise");
-    }
-    else if(direction=="down"){
-        for (auto coords: this->getCoords()){
-            buffer=coords[1]+1;
-            if (coords[1]>0)
-                if(buffer==ROW||board.getvalue(coords[0],buffer)){
-                    toupdate=false;
-                    newpiece=true;
-                    if (!ghost) this->lock(board);
-                    break;
-                } 
-        }
-        if (toupdate) y++;
-
-    }
+    if(toupdate){
+        if(clockwise) this->rotateClockwise();
+        else this->rotateCounterClockwise();
+    } 
 };
 
 

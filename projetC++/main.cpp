@@ -13,79 +13,104 @@ int main()
     sf::RenderWindow window(sf::VideoMode(CELLSIZE*COLUMN, CELLSIZE*ROW), "My window");
 
     window.setFramerateLimit(200);
-    int speedupdate=1000;
+    int speed=1000;
 
     //Pieces used in the game 
     
     tetromino piece;
     tetromino ghost;
     
-    //Boolean to check if we need a new game or not
-
+    //boolean to check if I can lock the piece and if I have to create a new piece
+    bool tolock=false;
     bool newpiece=true;
-    int choice = distribution(generator);
-    sf::Clock clock;
-    sf::Time timer= clock.getElapsedTime();
+    bool keyhold=false;
+
+    int lineCounter=0;
+    int choice;
+
+    sf::Clock gameTime;
+    sf::Clock clockSpeed;
+
     while (window.isOpen())
     {
-        if (newpiece){
-            choice=distribution(generator);
-            piece = tetromino_array[choice];
-            piece.setCoord(int(COLUMN/2),0);
-            newpiece=false;
+        while(true){
+            if(board.inHiddenLayer()) break;
+            if (newpiece){
+                choice=distribution(generator);
+                piece = tetromino_array[I_tetromino];
+                piece.setCoord(int(COLUMN/2),2);
+                newpiece=false;
+            }
+            sf::Event e;
+            while (window.pollEvent(e))
+            {
+                if (e.type == sf::Event::Closed)
+                    window.close();
+
+                else if(e.type==sf::Event::MouseButtonPressed){
+                    if(e.mouseButton.button==sf::Mouse::Left){
+                        int x=sf::Mouse::getPosition(window).x/CELLSIZE; 
+                        int y=sf::Mouse::getPosition(window).y/CELLSIZE;
+                        board.setCell(x,y+3,6);
+                    }
+                }
+                else if (e.type== sf::Event::KeyPressed){
+                    if (e.key.code==sf::Keyboard::Right||e.key.code==sf::Keyboard::D){
+                        piece.updateRight(board);
+                    }
+                    else if (e.key.code==sf::Keyboard::Left||e.key.code==sf::Keyboard::Q){
+                        piece.updateLeft(board);
+                    }
+                    else if (e.key.code==sf::Keyboard::Down||e.key.code==sf::Keyboard::S){
+                        piece.updateDown(board,newpiece); 
+                    }
+                    else if(e.key.code==sf::Keyboard::Up||e.key.code==sf::Keyboard::X){
+                        piece.updateRotate(board);
+                        // piece.rotateClockwise();
+                    }
+                    else if(e.key.code==sf::Keyboard::Space){
+                        piece.harddrop(board,newpiece);
+                    }
+                    else if(e.key.code==sf::Keyboard::Z){
+                    }
+                    else if(e.key.code==sf::Keyboard::Escape){
+                        window.close();
+                    }
+                    else if(e.key.code==sf::Keyboard::R){
+                        newpiece=true;
+                    }
+            
+                }
+            }
+            
+            if(clockSpeed.getElapsedTime().asMilliseconds()>speed){
+                clockSpeed.restart();
+                piece.updateDown(board,newpiece);
+            }
+            if(lineCounter==10){
+                speed/=1.5;
+                lineCounter=0;
+            }
+            drawGrid(window);
+            piece.draw(window);
+            piece.drawGhost(board,window);
+            drawLocked(board,window);
+            window.display();
+            window.clear();
         }
         sf::Event e;
-        while (window.pollEvent(e))
-        {
-            if (e.type == sf::Event::Closed)
+        while(window.pollEvent(e)){
+            if (e.type==sf::Event::Closed){
                 window.close();
-
-            else if(e.type==sf::Event::MouseButtonPressed){
-                if(e.mouseButton.button==sf::Mouse::Left){
-                    int x=sf::Mouse::getPosition(window).x/CELLSIZE; 
-                    int y=sf::Mouse::getPosition(window).y/CELLSIZE;
-                    board.setcell(x,y,6);
-                }
             }
-            else if (e.type== sf::Event::KeyPressed){
-                if (e.key.code==sf::Keyboard::Right||e.key.code==sf::Keyboard::D){
-                    piece.update(board,"right",newpiece);
-                }
-                else if (e.key.code==sf::Keyboard::Left||e.key.code==sf::Keyboard::Q){
-                    piece.update(board,"left",newpiece);
-
-                }
-                else if (e.key.code==sf::Keyboard::Down||e.key.code==sf::Keyboard::S){
-                    piece.update(board,"down",newpiece);
-                }
-                else if(e.key.code==sf::Keyboard::Up||e.key.code==sf::Keyboard::X){
-                    piece.update(board,"clockwise",newpiece);
-
-                }
-                else if(e.key.code==sf::Keyboard::Z){
-                    piece.update(board,"counterwise",newpiece);
-
-                }
-                else if (e.key.code==sf::Keyboard::Space){
-                    piece.harddrop(board,newpiece);
-                }
-                else if(e.key.code==sf::Keyboard::Escape){
+            if (e.type==sf::Event::KeyPressed){
+                if (e.key.code==sf::Keyboard::Escape){
                     window.close();
                 }
-                else if(e.key.code==sf::Keyboard::R){
-                }
-         
             }
         }
-        
-        if (clock.getElapsedTime().asMilliseconds()>speedupdate ){
-            piece.update(board,"down",newpiece);
-            clock.restart();
-        }
         drawGrid(window);
-        drawLocked(board,window);
-        piece.draw(window);
-        piece.drawGhost(window,board);
+        drawEnd(board,window);
         window.display();
         window.clear();
 

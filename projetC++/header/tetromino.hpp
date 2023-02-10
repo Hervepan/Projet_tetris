@@ -1,21 +1,14 @@
 #pragma once 
 
-#include <SFML/Window.hpp>
-#include <SFML/Graphics.hpp>
-#include <iostream>
-#include <random>   
-#include <array>
 #include "board.hpp"
 
 using namespace std;
-
-using arraysix=array<array<int,2>,3>;
-using arrayeight=array<array<int,2>,4>;
 
 class tetromino{
     int value;
     int x;
     int y;
+    int rotateState;
     arraysix offset;
     sf::Color color;
 
@@ -23,17 +16,22 @@ class tetromino{
         //constructor
         tetromino(){};
         tetromino(int value,arraysix offset,sf::Color color):
-            value{value},offset(offset),color(color){};
+            value{value},rotateState{0},offset(offset),color(color){};
             
         //method associated to the tetromino
         void setCoord(int x,int y);
-        void draw(sf::RenderWindow& window);
-        void drawGhost(sf::RenderWindow& window,Board& board);
-        void rotate(string direction="clockwise"s);
-        void update(Board& board,string direction,bool& newpiece,bool ghost=false);
-        void lock(Board& board);
-        void harddrop(Board& board,bool& newpiece);
         arrayeight getCoords();
+        void draw(sf::RenderWindow& window);
+        void updateRight(Board& board);
+        void updateLeft(Board& board);
+        void lock(Board& board);
+        void updateDown(Board& board,bool& newpiece,bool ghost=false);
+        void harddrop(Board& board,bool& newpiece);
+        void drawGhost(Board& board,sf::RenderWindow& window);
+        void rotateClockwise();
+        void rotateCounterClockwise();
+        void updateRotate(Board& board,bool clockwise=true);
+
 
 };
 
@@ -50,4 +48,12 @@ extern sf::Color colorarray[7];
 
 extern array<tetromino,7> tetromino_array;
 
+extern wallkick zeroone;
+extern wallkick onetwo;
+extern wallkick twothree;
+extern wallkick threezero;
+extern wallkick zeroone_I;
+extern wallkick onetwo_I;
+extern wallkick twothree_I;
+extern wallkick threezero_I;
 //Color we use in different 
