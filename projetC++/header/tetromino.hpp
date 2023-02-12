@@ -49,6 +49,8 @@ extern tetromino T;
 extern sf::Color colorarray[7]; 
 extern array<tetromino,7> tetromino_array;
 
+
+//WallKick value for the tetrominos
 extern wallkick zero;
 extern wallkick one;
 extern wallkick two;

@@ -13,7 +13,7 @@ int main()
     sf::RenderWindow window(sf::VideoMode(CELLSIZE*COLUMN, CELLSIZE*ROW), "My window");
 
     window.setFramerateLimit(200);
-    int speed=1000;
+    int speed=80;
 
     //Pieces used in the game 
     
@@ -81,8 +81,7 @@ int main()
                     }
             
                 }
-            }
-            
+            }         
             if(clockSpeed.getElapsedTime().asMilliseconds()>speed){
                 clockSpeed.restart();
                 piece.updateDown(board,newpiece);
@@ -90,7 +89,9 @@ int main()
             if(lineCounter==10){
                 speed/=1.5;
                 lineCounter=0;
+                cout << speed << endl; 
             }
+            board.lineClear(lineCounter);
             drawGrid(window);
             piece.draw(window);
             piece.drawGhost(board,window);

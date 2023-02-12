@@ -10,15 +10,13 @@ void drawPixel(int x,int y, sf::Color color, sf::RenderWindow &window)
 };
 
 void drawGrid(sf::RenderWindow& window){
-
     for (int x=0;x<COLUMN;x++)
         for (int y=3;y<ROW+3;y++)
             drawPixel(x,y,sf::Color(49,49,49),window);
     
 }
 
-void drawLocked(Board& board,sf::RenderWindow& window)
-{    
+void drawLocked(Board& board,sf::RenderWindow& window){    
     for (int x=0;x<COLUMN;x++)
         for (int y=3;y<ROW+3;y++)
                 if (board.getValue(x,y)) drawPixel(x,y,colorarray[board.getColor(x,y)],window);

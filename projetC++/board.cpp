@@ -24,3 +24,20 @@ bool Board::inHiddenLayer(){
     return false;
     
 }
+
+void Board::lineClear(int& lineCounter){
+    int sum{0};
+    for (int y=ROW+2;y>=3;y--){
+        for (int x=0;x<COLUMN;x++){
+            sum+=this->getValue(x,y);
+        }
+        if (sum==COLUMN){
+            lineCounter++;
+            for(int i=y;i>=3;i--){
+                cell.at(i)=cell.at(i-1);
+                color.at(i)=color.at(i-1);
+            }
+        }
+        sum=0;
+    }
+};
