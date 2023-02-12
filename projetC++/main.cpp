@@ -37,7 +37,7 @@ int main()
             if(board.inHiddenLayer()) break;
             if (newpiece){
                 choice=distribution(generator);
-                piece = tetromino_array[I_tetromino];
+                piece = tetromino_array[choice];
                 piece.setCoord(int(COLUMN/2),2);
                 newpiece=false;
             }
@@ -65,13 +65,13 @@ int main()
                         piece.updateDown(board,newpiece); 
                     }
                     else if(e.key.code==sf::Keyboard::Up||e.key.code==sf::Keyboard::X){
-                        piece.updateRotate(board);
-                        // piece.rotateClockwise();
+                        piece.updateKickRotate(board);
                     }
                     else if(e.key.code==sf::Keyboard::Space){
                         piece.harddrop(board,newpiece);
                     }
                     else if(e.key.code==sf::Keyboard::Z){
+                        piece.updateKickRotate(board,false);
                     }
                     else if(e.key.code==sf::Keyboard::Escape){
                         window.close();

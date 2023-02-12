@@ -11,11 +11,15 @@ using arraysix=array<array<int,2>,3>;
 using arrayeight=array<array<int,2>,4>;
 
 class wallkick{
-    arrayeight container;
-
     public:
+        arrayeight container;
         wallkick(arrayeight container):container{container}{};
-        void flipsigned();
+        void flipsigned(){
+            for (array<int,2>& coords:container){
+                coords[0]*=-1;
+                coords[1]*=-1;
+            }
+        };
 };
 
 static const int COLUMN = 10;

@@ -28,9 +28,9 @@ class tetromino{
         void updateDown(Board& board,bool& newpiece,bool ghost=false);
         void harddrop(Board& board,bool& newpiece);
         void drawGhost(Board& board,sf::RenderWindow& window);
-        void rotateClockwise();
-        void rotateCounterClockwise();
-        void updateRotate(Board& board,bool clockwise=true);
+        void rotate(bool clockwise=true);
+        bool updateRotate(Board& board,bool clockwise=true);
+        void updateKickRotate(Board& board, bool clockwise=true);
 
 
 };
@@ -44,16 +44,20 @@ extern tetromino J;
 extern tetromino L;
 extern tetromino T;
 
-extern sf::Color colorarray[7]; 
+//Color we use in different 
 
+extern sf::Color colorarray[7]; 
 extern array<tetromino,7> tetromino_array;
 
-extern wallkick zeroone;
-extern wallkick onetwo;
-extern wallkick twothree;
-extern wallkick threezero;
+extern wallkick zero;
+extern wallkick one;
+extern wallkick two;
+extern wallkick three;
+
 extern wallkick zeroone_I;
 extern wallkick onetwo_I;
 extern wallkick twothree_I;
 extern wallkick threezero_I;
-//Color we use in different 
+
+extern array<wallkick,4> wallkick_array;
+extern array<wallkick,4> wallkick_array_I;
