@@ -10,10 +10,10 @@ int main()
     std::random_device r;
     std::default_random_engine generator(r()) ;
     std::uniform_int_distribution<int> distribution(0,6);
-    sf::RenderWindow window(sf::VideoMode(CELLSIZE*COLUMN, CELLSIZE*ROW), "My window");
+    sf::RenderWindow window(sf::VideoMode(CELLSIZE*COLUMN+CELLSIZE*8, CELLSIZE*ROW), "My window");
 
     window.setFramerateLimit(200);
-    int speed=80;
+    int speed=1000;
 
     //Pieces used in the game 
     
@@ -25,7 +25,9 @@ int main()
     bool newpiece=true;
     bool keyhold=false;
 
-    int lineCounter=0;
+    int levelCounter{0};
+    int lineCleared{0};
+    int score{0};
     int choice;
 
     sf::Clock gameTime;
@@ -37,7 +39,7 @@ int main()
             if(board.inHiddenLayer()) break;
             if (newpiece){
                 choice=distribution(generator);
-                piece = tetromino_array[choice];
+                piece=tetromino_array[choice];
                 piece.setCoord(int(COLUMN/2),2);
                 newpiece=false;
             }
@@ -82,16 +84,20 @@ int main()
             
                 }
             }         
+
             if(clockSpeed.getElapsedTime().asMilliseconds()>speed){
                 clockSpeed.restart();
                 piece.updateDown(board,newpiece);
             }
-            if(lineCounter==10){
-                speed/=1.5;
-                lineCounter=0;
-                cout << speed << endl; 
+
+            if(levelCounter>=10){
+                speed/=1.7;
+                levelCounter=levelCounter%10    ;
+                cout << "Increase speed !" << endl;
             }
-            board.lineClear(lineCounter);
+
+            score+=board.lineClear(levelCounter,lineCleared);
+            drawScoreBoard(window,lineCleared,score);
             drawGrid(window);
             piece.draw(window);
             piece.drawGhost(board,window);
