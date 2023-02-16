@@ -5,7 +5,6 @@
 using namespace std;
 
 class tetromino{
-    int value;
     int x;
     int y;
     int rotateState;
@@ -13,6 +12,7 @@ class tetromino{
     sf::Color color;
 
     public: 
+        int value;
         //constructor
         tetromino(){};
         tetromino(int value,arraysix offset,sf::Color color):
@@ -31,8 +31,7 @@ class tetromino{
         void rotate(bool clockwise=true);
         bool updateRotate(Board& board,bool clockwise=true);
         void updateKickRotate(Board& board, bool clockwise=true);
-
-
+        bool inHiddenLayer();
 };
 
 extern tetromino I;

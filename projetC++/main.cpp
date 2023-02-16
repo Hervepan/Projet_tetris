@@ -7,7 +7,7 @@ using namespace std;
 int main()
 {
     Board board;
-    sf::RenderWindow window(sf::VideoMode(CELLSIZE*(COLUMN+8), CELLSIZE*ROW), "TETRIS GAME");
+    sf::RenderWindow window(sf::VideoMode(CELLSIZE*(COLUMN+9), CELLSIZE*ROW), "TETRIS GAME");
 
     window.setFramerateLimit(200);
     int speed=1000;
@@ -16,17 +16,21 @@ int main()
     
     tetromino piece;
     tetromino ghost;
+    tetromino hold;
+    tetromino buffer; //Sole purpose is to swap hold and current piece
     
     //boolean to check if I can lock the piece and if I have to create a new piece
     bool tolock=false;
     bool newpiece=true;
     bool keyhold=false;
+    bool holding=false;
 
     int levelCounter{0};
     int lineCleared{0};
     int score{0};
     int choice;
-    
+    int x_value;
+
     bag_tetromino bag;
     sf::Clock gameTime;
     sf::Clock clockSpeed;
@@ -36,8 +40,10 @@ int main()
         while(true){
             if(board.inHiddenLayer()) break;
             if (newpiece){
-                piece=tetromino_array[bag.get_value()];
-                piece.setCoord(int(COLUMN/2),2);
+                choice=bag.get_value();
+                piece=tetromino_array[choice];
+                x_value=(choice==I_tetromino)?int(COLUMN/2)+1:int(COLUMN/2);
+                piece.setCoord(x_value,2);
                 newpiece=false;
             }
             sf::Event e;
@@ -45,7 +51,8 @@ int main()
             {
                 if (e.type == sf::Event::Closed)
                     window.close();
-                //For debugging purpose, place element in the grid with the mouse 
+
+                //For debugging purpose, decomment this to place blocks in the grid with the click of the mouse 
                 
                 // else if(e.type==sf::Event::MouseButtonPressed){
                 //     if(e.mouseButton.button==sf::Mouse::Left){
@@ -54,6 +61,7 @@ int main()
                 //         board.setCell(x,y+3,6);
                 //     }
                 // }
+
                 else if (e.type== sf::Event::KeyPressed){
                     if (e.key.code==sf::Keyboard::Right||e.key.code==sf::Keyboard::D){
                         piece.updateRight(board);
@@ -69,6 +77,20 @@ int main()
                     }
                     else if(e.key.code==sf::Keyboard::Space){
                         piece.harddrop(board,newpiece);
+                    }
+                    else if(e.key.code==sf::Keyboard::C){
+                        int offset_x=(piece.value==I_tetromino)?5:4;
+                        int value=piece.value;
+                        if(holding){
+                            piece=hold;
+                            x_value=(piece.value==I_tetromino)?int(COLUMN/2)+1:int(COLUMN/2);
+                            piece.setCoord(x_value,2);
+                        }else{
+                            holding=true;
+                            newpiece=true;
+                        }
+                        hold=tetromino_array.at(value);
+                        hold.setCoord(COLUMN+offset_x,9);
                     }
                     else if(e.key.code==sf::Keyboard::Z){
                         piece.updateKickRotate(board,false);
@@ -97,6 +119,7 @@ int main()
             score+=board.lineClear(levelCounter,lineCleared);
             drawScoreBoard(window,lineCleared,score);
             drawGrid(window);
+            hold.draw(window);
             piece.draw(window);
             piece.drawGhost(board,window);
             bag.drawBag(window);

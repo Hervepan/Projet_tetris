@@ -35,7 +35,7 @@ void drawScoreBoard(sf::RenderWindow& window,int lineCleared, int score){
     if(!font.loadFromFile("font/Tetrisfont.ttf"))
         throw("Couldn't load the font");
     
-    sf::Text scoreText, lineClearedText, nextPiece;
+    sf::Text scoreText, lineClearedText, nextPiece, hold;
     stringstream scoreString, lineClearedString;
 
     scoreText.setFont(font);
@@ -50,20 +50,28 @@ void drawScoreBoard(sf::RenderWindow& window,int lineCleared, int score){
     nextPiece.setCharacterSize(40);
     nextPiece.setFillColor(sf::Color::White);
 
+    hold.setFont(font);
+    hold.setCharacterSize(40);
+    hold.setFillColor(sf::Color::White);
+
     scoreString << "SCORE : " << score;
     lineClearedString << "LINE : " << lineCleared;
 
     scoreText.setString(scoreString.str());
     lineClearedText.setString(lineClearedString.str());
     nextPiece.setString("NEXT :");
+    hold.setString("HOLD :");
 
-    scoreText.setPosition(CELLSIZE*COLUMN*1.15,CELLSIZE*0.8);
-    lineClearedText.setPosition(CELLSIZE*COLUMN*1.15,CELLSIZE*2);
+    scoreText.setPosition(CELLSIZE*COLUMN*1.15,CELLSIZE*0.5);
+    lineClearedText.setPosition(CELLSIZE*COLUMN*1.15,CELLSIZE*1.5);
     nextPiece.setPosition(CELLSIZE*COLUMN*1.15,CELLSIZE*8.5);
+    hold.setPosition(CELLSIZE*COLUMN*1.15,CELLSIZE*3);
 
     window.draw(scoreText);
     window.draw(lineClearedText);
     window.draw(nextPiece);
+    window.draw(hold);
+
 
 
 }

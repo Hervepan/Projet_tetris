@@ -184,6 +184,15 @@ void tetromino::updateKickRotate(Board& board, bool clockwise){
    }
 };
 
+bool tetromino::inHiddenLayer(){
+    arrayeight coords=this->getCoords();
+    for(auto coord:coords){
+        if (coord.at(1)<3) return true;
+    }
+    return false;
+}
+
+
 int bag_tetromino::get_value(){
     int ret=bag.at(start);
     bag.at(start)=(distribution(generator)%6);
