@@ -35,7 +35,6 @@ class tetromino{
 
 };
 
-
 extern tetromino I;
 extern tetromino O;
 extern tetromino S;
@@ -63,3 +62,27 @@ extern wallkick threezero_I;
 
 extern array<wallkick,4> wallkick_array;
 extern array<wallkick,4> wallkick_array_I;
+
+class bag_tetromino{
+    public:
+        array<int,3> bag;
+        int start;
+        default_random_engine generator;
+        uniform_int_distribution<int> distribution;
+
+        //By putting the random generator in the attribut, we avoid creating a new random generator at each frame
+
+        bag_tetromino(){
+            std::random_device r;
+            default_random_engine generator(r());
+            uniform_int_distribution<int> distribution(0,1000);
+            for(auto& i:bag){
+                i=(distribution(generator)%6);
+            }
+            this->start=0;
+            this->generator=generator;
+            this->distribution=distribution;
+        }
+        int get_value();
+        void drawBag(sf::RenderWindow& window);
+};

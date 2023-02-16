@@ -2,7 +2,7 @@
 #include <unistd.h>
 #include <sstream>
 
-void drawPixel(int x,int y, sf::Color color, sf::RenderWindow &window)
+void drawPixel(float x,float y, sf::Color color, sf::RenderWindow &window)
 {
     sf::RectangleShape rectangle(sf::Vector2f(CELLSIZE-1, CELLSIZE-1));
     rectangle.setFillColor(color);
@@ -35,7 +35,7 @@ void drawScoreBoard(sf::RenderWindow& window,int lineCleared, int score){
     if(!font.loadFromFile("font/Tetrisfont.ttf"))
         throw("Couldn't load the font");
     
-    sf::Text scoreText, lineClearedText;
+    sf::Text scoreText, lineClearedText, nextPiece;
     stringstream scoreString, lineClearedString;
 
     scoreText.setFont(font);
@@ -46,17 +46,24 @@ void drawScoreBoard(sf::RenderWindow& window,int lineCleared, int score){
     lineClearedText.setCharacterSize(40);
     lineClearedText.setFillColor(sf::Color::White);
 
+    nextPiece.setFont(font);
+    nextPiece.setCharacterSize(40);
+    nextPiece.setFillColor(sf::Color::White);
+
     scoreString << "SCORE : " << score;
     lineClearedString << "LINE : " << lineCleared;
 
     scoreText.setString(scoreString.str());
     lineClearedText.setString(lineClearedString.str());
+    nextPiece.setString("NEXT :");
 
     scoreText.setPosition(CELLSIZE*COLUMN*1.15,CELLSIZE*0.8);
     lineClearedText.setPosition(CELLSIZE*COLUMN*1.15,CELLSIZE*2);
+    nextPiece.setPosition(CELLSIZE*COLUMN*1.15,CELLSIZE*8.5);
 
     window.draw(scoreText);
     window.draw(lineClearedText);
+    window.draw(nextPiece);
 
 
 }

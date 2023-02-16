@@ -3,14 +3,11 @@
 
 using namespace std;
 
-Board board;
 
 int main()
 {
-    std::random_device r;
-    std::default_random_engine generator(r()) ;
-    std::uniform_int_distribution<int> distribution(0,6);
-    sf::RenderWindow window(sf::VideoMode(CELLSIZE*COLUMN+CELLSIZE*8, CELLSIZE*ROW), "My window");
+    Board board;
+    sf::RenderWindow window(sf::VideoMode(CELLSIZE*(COLUMN+8), CELLSIZE*ROW), "TETRIS GAME");
 
     window.setFramerateLimit(200);
     int speed=1000;
@@ -29,7 +26,8 @@ int main()
     int lineCleared{0};
     int score{0};
     int choice;
-
+    
+    bag_tetromino bag;
     sf::Clock gameTime;
     sf::Clock clockSpeed;
 
@@ -38,8 +36,7 @@ int main()
         while(true){
             if(board.inHiddenLayer()) break;
             if (newpiece){
-                choice=distribution(generator);
-                piece=tetromino_array[choice];
+                piece=tetromino_array[bag.get_value()];
                 piece.setCoord(int(COLUMN/2),2);
                 newpiece=false;
             }
@@ -48,14 +45,15 @@ int main()
             {
                 if (e.type == sf::Event::Closed)
                     window.close();
-
-                else if(e.type==sf::Event::MouseButtonPressed){
-                    if(e.mouseButton.button==sf::Mouse::Left){
-                        int x=sf::Mouse::getPosition(window).x/CELLSIZE; 
-                        int y=sf::Mouse::getPosition(window).y/CELLSIZE;
-                        board.setCell(x,y+3,6);
-                    }
-                }
+                //For debugging purpose, place element in the grid with the mouse 
+                
+                // else if(e.type==sf::Event::MouseButtonPressed){
+                //     if(e.mouseButton.button==sf::Mouse::Left){
+                //         int x=sf::Mouse::getPosition(window).x/CELLSIZE; 
+                //         int y=sf::Mouse::getPosition(window).y/CELLSIZE;
+                //         board.setCell(x,y+3,6);
+                //     }
+                // }
                 else if (e.type== sf::Event::KeyPressed){
                     if (e.key.code==sf::Keyboard::Right||e.key.code==sf::Keyboard::D){
                         piece.updateRight(board);
@@ -91,7 +89,7 @@ int main()
             }
 
             if(levelCounter>=10){
-                speed/=1.7;
+                speed/=1.5;
                 levelCounter=levelCounter%10    ;
                 cout << "Increase speed !" << endl;
             }
@@ -101,6 +99,7 @@ int main()
             drawGrid(window);
             piece.draw(window);
             piece.drawGhost(board,window);
+            bag.drawBag(window);
             drawLocked(board,window);
             window.display();
             window.clear();

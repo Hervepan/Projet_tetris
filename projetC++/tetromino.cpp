@@ -6,14 +6,15 @@ using namespace std;
 
 //Color used for the different tetrominos
 sf::Color colorarray[7] = {
-    sf::Color(253, 63, 89 ,200), //salmon
+    sf::Color(234, 20, 28 ,200), //red
     sf::Color(255, 200, 46 ,200), //orange
     sf::Color(254, 251, 52 ,200), //yellow
     sf::Color(83, 218, 63 ,200), //green
     sf::Color(1, 237, 250 ,200), //cyan
+    sf::Color(65,105,225,200), //blue
     sf::Color(221, 10, 178 ,200), //purple
-    sf::Color(234, 20, 28 ,200), //red
 };
+
 
 //Different tetromino pieces
 tetromino Z(Z_tetromino,{0,-1,-1,-1,1,0},colorarray[Z_tetromino]);
@@ -183,3 +184,26 @@ void tetromino::updateKickRotate(Board& board, bool clockwise){
    }
 };
 
+int bag_tetromino::get_value(){
+    int ret=bag.at(start);
+    bag.at(start)=(distribution(generator)%6);
+    start++;
+    start=start%3;
+    return ret;
+}
+
+void bag_tetromino::drawBag(sf::RenderWindow& window){
+    tetromino pieceBuffer;
+    int index,tetromino_value;
+    float offset_x,offset_y;
+    for(int i=0;i<3;i++){
+        index=start+i;
+        tetromino_value=bag.at(index%3);
+        pieceBuffer=tetromino_array.at(tetromino_value);
+        offset_x=(tetromino_value==I_tetromino)?5:4;
+        offset_y=(tetromino_value==I_tetromino)? offset_y+2: offset_y+3;
+        pieceBuffer.setCoord(COLUMN+offset_x,12+offset_y);
+        pieceBuffer.draw(window);
+
+    }
+}
