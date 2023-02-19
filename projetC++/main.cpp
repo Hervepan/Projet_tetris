@@ -80,17 +80,20 @@ int main()
                     }
                     else if(e.key.code==sf::Keyboard::C){
                         int offset_x=(piece.value==I_tetromino)?5:4;
-                        int value=piece.value;
-                        if(holding){
-                            piece=hold;
-                            x_value=(piece.value==I_tetromino)?int(COLUMN/2)+1:int(COLUMN/2);
-                            piece.setCoord(x_value,2);
-                        }else{
-                            holding=true;
-                            newpiece=true;
+                        int value=piece.value;  
+                        if(piece.inHiddenLayer()){
+                            if(holding){
+                                piece=hold;
+                                x_value=(piece.value==I_tetromino)?int(COLUMN/2)+1:int(COLUMN/2);
+                                piece.setCoord(x_value,2);
+                            }else{
+                                holding=true;
+                                newpiece=true;
+                            }
+                            hold=tetromino_array.at(value);
+                            hold.setCoord(COLUMN+offset_x,9);
                         }
-                        hold=tetromino_array.at(value);
-                        hold.setCoord(COLUMN+offset_x,9);
+              
                     }
                     else if(e.key.code==sf::Keyboard::Z){
                         piece.updateKickRotate(board,false);
