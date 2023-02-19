@@ -23,12 +23,8 @@ Scoring :
     3 lines (triple): 300 points
     4 lines (tetris): 1200 points
 
-Line combo :
-
-    line clear: 1x combo
-    line clears: 2x combo
-    line clears: 4x combo
-    line clears: 8x combo
+Hold :
+	If it's the first time, you can hold at any point, from then on it's only when it appears that you can.
 
 Time speed acceleration :
 
