@@ -19,5 +19,6 @@ class Board{
         int getValue(int x,int y);
         bool inBound(int x,int y);
         bool inHiddenLayer();
-        int lineClear(int& lineCounter,int& lineCleared);
+        int lineClear(int& lineCounter,int& lineCleared,int& lineSend);
+        void addLine(int lineSend);
 };

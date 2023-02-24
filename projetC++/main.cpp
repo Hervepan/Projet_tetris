@@ -1,11 +1,40 @@
 #include "header/tetromino.hpp"
 #include "header/drawing.hpp"
+#include <SFML/Network.hpp>
+#include <SFML/System.hpp>
 
 using namespace std;
 
 
-int main()
+int main(int argc, char* argv[])
 {
+    sf::TcpListener listener;
+    sf::TcpSocket client;
+    if (argc==1){
+        cerr << "Client or server missing" << endl;
+        return 0;
+    }
+    string client_server=argv[1];
+    if (client_server=="server"){
+        cout << "Waiting for connection" << endl;
+        // bind the listener to a port
+        if (listener.listen(53000) != sf::Socket::Done){
+            cerr << "The port you want to use is already used" << endl;
+            return 0;
+        }
+        listener.accept(client);
+    }
+    else if(client_server=="client"){
+        if(argc!=3){
+            cerr << "The server ip address is missing" << endl;
+            return 0;
+        }
+        sf::IpAddress serverAdress=argv[2];
+        client.connect(serverAdress,53000);
+    }
+    client.setBlocking(false);
+
+    cout << "Connection established" << endl;
     Board board;
     sf::RenderWindow window(sf::VideoMode(CELLSIZE*(COLUMN+9), CELLSIZE*ROW), "TETRIS GAME");
 
@@ -19,6 +48,12 @@ int main()
     tetromino hold;
     tetromino buffer; //Sole purpose is to swap hold and current piece
     
+    //Send and receive buffer
+
+    int receive;
+    size_t sent_size;
+    size_t size;
+
     //boolean to check if I can lock the piece and if I have to create a new piece
     bool tolock=false;
     bool newpiece=true;
@@ -28,6 +63,7 @@ int main()
     int levelCounter{0};
     int lineCleared{0};
     int score{0};
+    int lineSend;
     int choice;
     int x_value;
 
@@ -41,7 +77,7 @@ int main()
             if(board.inHiddenLayer()) break;
             if (newpiece){
                 choice=bag.get_value();
-                piece=tetromino_array[choice];
+                piece=tetromino_array[I_tetromino];
                 x_value=(choice==I_tetromino)?int(COLUMN/2)+1:int(COLUMN/2);
                 piece.setCoord(x_value,2);
                 newpiece=false;
@@ -101,10 +137,8 @@ int main()
                     else if(e.key.code==sf::Keyboard::Escape){
                         window.close();
                     }
-                    else if(e.key.code==sf::Keyboard::R){
-                        newpiece=true;
-                    }
-            
+                
+                
                 }
             }         
 
@@ -118,8 +152,19 @@ int main()
                 levelCounter=levelCounter%10    ;
                 cout << "Increase speed !" << endl;
             }
-
-            score+=board.lineClear(levelCounter,lineCleared);
+            
+           
+            score+=board.lineClear(levelCounter,lineCleared,lineSend);
+            if (lineSend!=0) cout << lineSend << endl;
+            if(lineSend>1){
+                lineSend-=1;
+                client.send(&lineSend,2,sent_size);
+            }
+            sf::Socket::Status status = client.receive(&receive,2,size);
+            if(status==sf::Socket::Done){
+                board.addLine(receive);
+                receive=0;
+            }
             drawScoreBoard(window,lineCleared,score);
             drawGrid(window);
             hold.draw(window);

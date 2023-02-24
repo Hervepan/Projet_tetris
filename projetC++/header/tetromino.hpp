@@ -44,7 +44,7 @@ extern tetromino T;
 
 //Color we use in different 
 
-extern sf::Color colorarray[7]; 
+extern sf::Color colorarray[8]; 
 extern array<tetromino,7> tetromino_array;
 
 

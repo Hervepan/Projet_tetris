@@ -5,7 +5,7 @@ using namespace std;
 //Board element
 
 //Color used for the different tetrominos
-sf::Color colorarray[7] = {
+sf::Color colorarray[8] = {
     sf::Color(234, 20, 28 ,200), //red
     sf::Color(255, 200, 46 ,200), //orange
     sf::Color(254, 251, 52 ,200), //yellow
@@ -13,6 +13,7 @@ sf::Color colorarray[7] = {
     sf::Color(1, 237, 250 ,200), //cyan
     sf::Color(65,105,225,200), //blue
     sf::Color(221, 10, 178 ,200), //purple
+    sf::Color(125,125,125), // grey
 };
 
 
