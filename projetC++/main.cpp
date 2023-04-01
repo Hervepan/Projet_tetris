@@ -8,33 +8,38 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
+    bool multiplayer = false;
     sf::TcpListener listener;
     sf::TcpSocket client;
-    if (argc==1){
-        cerr << "Client or server missing" << endl;
-        return 0;
-    }
-    string client_server=argv[1];
-    if (client_server=="server"){
-        cout << "Waiting for connection" << endl;
-        // bind the listener to a port
-        if (listener.listen(53000) != sf::Socket::Done){
-            cerr << "The port you want to use is already used" << endl;
+    if (argc>1){
+        string hostclient = argv[1];
+        multiplayer=true;
+        std::cout << "You are trying to play multiplayer, reminder : correct parameter are {server|client} {if client: Server IP address}";
+        if (argc==1){
+            cerr << "Client or server missing" << endl;
             return 0;
         }
-        listener.accept(client);
-    }
-    else if(client_server=="client"){
-        if(argc!=3){
-            cerr << "The server ip address is missing" << endl;
-            return 0;
+        if (hostclient=="server"){
+            std::cout << "Waiting for connection" << endl;
+            // bind the listener to a port
+            if (listener.listen(53000) != sf::Socket::Done){
+                cerr << "The port you want to use is already used" << endl;
+                return 0;
+            }
+            listener.accept(client);
         }
-        sf::IpAddress serverAdress=argv[2];
-        client.connect(serverAdress,53000);
+        else if(hostclient=="client"){
+            if(argc!=3){
+                cerr << "The server ip address is missing" << endl;
+                return 0;
+            }
+            sf::IpAddress serverAdress=argv[2];
+            client.connect(serverAdress,53000);
+        }
+        client.setBlocking(false);
+        std::cout << "Connection established" << endl;
     }
-    client.setBlocking(false);
 
-    cout << "Connection established" << endl;
     Board board;
     sf::RenderWindow window(sf::VideoMode(CELLSIZE*(COLUMN+9), CELLSIZE*ROW), "TETRIS GAME");
 
@@ -77,7 +82,7 @@ int main(int argc, char* argv[])
             if(board.inHiddenLayer()) break;
             if (newpiece){
                 choice=bag.get_value();
-                piece=tetromino_array[I_tetromino];
+                piece=tetromino_array[choice];
                 x_value=(choice==I_tetromino)?int(COLUMN/2)+1:int(COLUMN/2);
                 piece.setCoord(x_value,2);
                 newpiece=false;
@@ -150,20 +155,25 @@ int main(int argc, char* argv[])
             if(levelCounter>=10){
                 speed/=1.5;
                 levelCounter=levelCounter%10    ;
-                cout << "Increase speed !" << endl;
+                std::cout << "Increase speed !" << endl;
             }
             
            
             score+=board.lineClear(levelCounter,lineCleared,lineSend);
-            if (lineSend!=0) cout << lineSend << endl;
-            if(lineSend>1){
-                lineSend-=1;
-                client.send(&lineSend,2,sent_size);
-            }
-            sf::Socket::Status status = client.receive(&receive,2,size);
-            if(status==sf::Socket::Done){
-                board.addLine(receive);
-                receive=0;
+            if (multiplayer){
+                if (lineSend != 0)
+                    std::cout << lineSend << endl;
+                if (lineSend > 1)
+                {
+                    lineSend -= 1;
+                    client.send(&lineSend, 2, sent_size);
+                }
+                sf::Socket::Status status = client.receive(&receive, 2, size);
+                if (status == sf::Socket::Done)
+                {
+                    board.addLine(receive);
+                    receive = 0;
+                }
             }
             drawScoreBoard(window,lineCleared,score);
             drawGrid(window);
