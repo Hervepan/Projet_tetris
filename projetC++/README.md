@@ -33,8 +33,9 @@ To check your IP adress on linux you can use `ip -4 a`
 |&#8595; or `S`| Move down |`Escape`| Quit the game |
 |&#8595; or `X`| Rotate clockwise | `C` | Hold |
 
-`CCW` stands for Counterclockwise <br>
-`Hold` is when you decide to change piece and put in the hold space <br>
+`CCW` : stands for Counterclockwise <br>
+`Hold` : It will switch the current tetromino with the one in the hold space  
+`Hard drop`: The tetromino will drop down instantly
 
 ## Multiplayer 
 
