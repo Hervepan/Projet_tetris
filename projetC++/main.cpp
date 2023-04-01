@@ -151,7 +151,6 @@ int main(int argc, char* argv[])
                 clockSpeed.restart();
                 piece.updateDown(board,newpiece);
             }
-
             if(levelCounter>=10){
                 speed/=1.5;
                 levelCounter=levelCounter%10    ;

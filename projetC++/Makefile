@@ -19,4 +19,4 @@ clean:
 
 .PHONY: run
 run: $(EXECUTABLE)
-	./$(EXECUTABLE) $(ARGS)
+	./$(EXECUTABLE)
