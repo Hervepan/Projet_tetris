@@ -1,11 +1,11 @@
 # Projet_tetris
-**Tetris game in c++ with SFML
+## Tetris game in c++ with SFML
 
 All the game file are in the ProjectC++ directory. <br>
 The tetris_todo.txt containes the specification for the tetris game.
 The networkTest.sh can be used to test the multiplayer online by emulating two device on one PC (for testing purpose) . 
 
-** Network
+##  Network
 
 The networkTest.sh creates 2 new network spaces (it's only temporary) and connect the two with a virtual link to simulate a fake network. <br>
 To make it work you have to launch the command : <br>
