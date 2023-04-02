@@ -13,10 +13,9 @@ You'll also need to have a way to compile C++ file (g++, Mingw, clang etc ....) 
 To launch the game you can juste launch the Makefile. <br>
 You can launch the following command : <br> 
 **Soloplayer mode**  : 
->>`make run` to launch the game <br>
->><br>
+make run` to launch the game <br>
 **Multiplayer mode** :
->>You'll have to give more arguments to play the game in twoplayer mode. <br>
+You'll have to give more arguments to play the game in twoplayer mode. <br>
 Template : `make run {server|client} {if client: Server IP adress}` <br>
 When you play with two player you need one of the two to host the game. In this case he'll need to run the command <br> 
 `make run server` 
