@@ -10,6 +10,7 @@ using namespace std;
 using arraysix=array<array<int,2>,3>;
 using arrayeight=array<array<int,2>,4>;
 
+// If you want to have more information on that topic just check wallkick tetris SRS
 class wallkick{
     public:
         arrayeight container;
