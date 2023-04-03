@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
     if (argc>1){
         string hostclient = argv[1];
         multiplayer=true;
-        std::cout << "You are trying to play multiplayer, reminder : correct parameter are {server|client} {if client: Server IP address}";
+        std::cout << "You are trying to play multiplayer, reminder : correct parameter are {server|client} {if client: Server IP address}" << endl;
         if (argc==1){
             cerr << "Client or server missing" << endl;
             return 0;
@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
 
     int levelCounter{0};
     int lineCleared{0}; 
-    int score{0}
+    int score{0};
     int lineSend;
     int choice;
     int x_value;
