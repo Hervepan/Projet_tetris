@@ -1,22 +1,23 @@
-#! /bin/bash
-
-if ! [[ -f /run/netns/blue ]]
-then 
-    sudo ip netns add blue
+if (($# != 1))
+then
+  exit
 fi
 
-if ! [[ -f /run/netns/red ]]
+if [[ $1 == "red" ]]
 then 
-    sudo ip netns add red
+  COLOR=31
+elif [[ $1 == "blue" ]]; then
+  COLOR=34
 fi
-
-sudo ip link add veth-red type veth peer name veth-blue
-sudo ip link set veth-red netns red 
-sudo ip link set veth-blue netns blue 
-sudo ip -n blue link set veth-blue up 
-sudo ip -n red link set veth-red up 
-sudo ip -n red addr add 192.168.15.1/24 dev veth-red  
-sudo ip -n blue addr add 192.168.15.2/24 dev veth-blue
-
+clear
+NEWPS1='${PS1/32/'$COLOR'}'
+echo "Please type the following command in the terminal to help see in which network space you are in"
+echo "PS1=$NEWPS1" 
+echo "To launch the game go into projectC++ and type the command :"
+if [[ $1 == "red" ]]; then
+  echo '    make run ARGS="server"' 
+elif [[ $1 == "blue" ]]; then
+  echo 'make run ARGS="client 192.168.15.1"'
+fi
 
 
