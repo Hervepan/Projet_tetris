@@ -5,7 +5,7 @@ All the game file are in the `ProjectC++` directory. <br>
 The `tetris_todo.txt` containes the specification for the tetris game. <br>
 The `networkTest.sh` can be used to test the multiplayer part by emulating two device on one PC (for testing purpose) . 
 
-##  Network
+##  multi_test
 
 In the multi_test directory you have three files : <br>
 `networkSetup` to setup the two network spaces <br>
