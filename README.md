@@ -7,7 +7,7 @@ The `networkTest.sh` can be used to test the multiplayer part by emulating two d
 
 ##  Network
 
-In the Network directory you have three files : <br>
+In the multi_test directory you have three files : <br>
 `networkSetup` to setup the two network spaces <br>
 `launchGame` {red|blue} to launch the game when you're in the red or blue network space <br>
 `cleanup` to remove the spaces created <br>
