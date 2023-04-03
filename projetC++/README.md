@@ -16,11 +16,11 @@ You can launch the following command : <br>
 `make run` to launch the game <br>
 **Multiplayer mode** :
 You'll have to give more arguments to play the game in twoplayer mode. <br>
-Template : `make run {server|client} {if client: Server IP adress}` <br>
+Template : `make run ARGS="{server|client} {if client: Server IP adress}"` <br>
 When you play with two player you need one of the two to host the game. In this case he'll need to run the command <br> 
-`make run server` 
+`make run ARGS="server"` 
 Then the other player (the client) needs to launch the following commmand. <br>
-`make run client IP_adress` where the `IP_adress` is the IP adress of the server (the host) <br>
+`make run ARGS="client IP_adress"` where the `IP_adress` is the IP adress of the server (the host) <br>
 To check your IP adress on linux you can use `ip -4 a` 
 
 # TETRIS GAME 
