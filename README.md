@@ -7,9 +7,7 @@ The `networkTest.sh` can be used to test the multiplayer part by emulating two d
 
 ##  Network
 
-The networkTest.sh creates 2 new network spaces (it's only temporary) and connect the two with a virtual link to simulate a fake network. <br>
-To make it work you have to launch the command : <br>
-`./networkTest.sh {red|blue}` 
-Then launch the actual game (follow the readme contained in the projetC++ directory)
-The two ip adresses in the virtual network are : <br>
-`192.168.15.1/24` and `192.168.15.2/24`
+In the Network directory you have three files : <br>
+`networkSetup` to setup the two network spaces <br>
+`launchGame` {red|blue} to launch the game when you're in the red or blue network space <br>
+`cleanup` to remove the spaces created <br>
