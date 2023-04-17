@@ -17,7 +17,7 @@ Trouver une manière de représenter le plateau et les tetrominos.(liste, tablea
 Pour faire tourner vu que les tetrominos sauf le I peuvent se mettre dans des blocs 3x3 donc c'est pas difficile ((x,y)->(-y,x) pour le sens horaire). Il faut juste faire attention au tetromino "I"
 
 ## Collision/Lock
-Pour fixer les tetrominos qui ont fini leur chute faites un tableau ou la case vaut 1 si il y a un bloc dans la case et du coup pour savoir is on a une collision il faudra juste utiliser ce tableau.
+Pour détecter les collisions, vous pouvez créer un tableau représentant la grille de jeu. Chaque cellule du tableau  a une valeur de 1 si elle est occupée par un bloc de tetris et 0 si elle est vide. Lorsqu’un tetris termine sa chute, on met à jour le tableau pour refléter sa position. Pour vérifier les collisions,on utilise ce tableau pour voir si l’une des cellules dans lesquelles le tetris essaie de se déplacer est déjà occupée.
 
 ## Score
 
